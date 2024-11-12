@@ -36,7 +36,7 @@ const context = await esbuild.context({
 	target: "es2022",
 	logLevel: "info",
 	sourcemap: prod ? false : "inline",
-	sourceRoot: "app://obsidian.md/plugin:sample-plugin/",
+	sourceRoot: "app://obsidian.md/plugin:timestampy/",
 	treeShaking: true,
 	outfile: "main.js",
 	minify: prod,
