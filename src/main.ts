@@ -3,21 +3,21 @@ import { t } from "./i18n";
 
 // Remember to rename these classes and interfaces!
 
-interface MyPluginSettings {
+interface TimestampySettings {
 	mySetting: string;
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: TimestampySettings = {
 	mySetting: "default",
 };
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class Timestampy extends Plugin {
+	settings: TimestampySettings;
 
 	async onload() {
-		console.debug("loading Sample Plugin");
+		console.debug("loading Timestampy plugin");
 		await this.loadSettings();
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new TimestampySettingTab(this.app, this));
 	}
 
 	onunload() {}
@@ -31,10 +31,10 @@ export default class MyPlugin extends Plugin {
 	}
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+class TimestampySettingTab extends PluginSettingTab {
+	plugin: Timestampy;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: Timestampy) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
