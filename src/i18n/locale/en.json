@@ -1,0 +1,7 @@
+{
+	"setting": {
+		"option-setting1": "Setting #1",
+		"option-setting1-desc": "It's a secret",
+		"option-setting1-placeholder": "Enter your secret"
+	}
+}
