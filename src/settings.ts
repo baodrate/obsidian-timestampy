@@ -1,6 +1,6 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { t } from "./i18n";
-import type Timestampy from "./main";
+import type Timestampy from "./timestampy";
 
 export interface TimestampySettings {
 	mySetting: string;
