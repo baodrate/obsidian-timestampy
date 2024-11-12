@@ -1,0 +1,58 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"ignore": []
+	},
+	"formatter": {
+		"enabled": true,
+		"ignore": [
+			"main.js"
+		],
+		"indentStyle": "tab"
+	},
+	"organizeImports": {
+		"enabled": true,
+		"ignore": [
+			"main.js"
+		]
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true
+		},
+		"ignore": [
+			"main.js"
+		]
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"json": {
+		"formatter": {
+			"lineWidth": 1
+		}
+	},
+	"overrides": [
+		{
+			"include": [
+				".release-please-manifest.json",
+				"release-please-config.json",
+				"tsconfig.json"
+			],
+			"json": {
+				"formatter": {
+					"indentStyle": "space"
+				}
+			}
+		}
+	]
+}

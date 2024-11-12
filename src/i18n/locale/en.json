@@ -1,0 +1,20 @@
+{
+	"commands": {
+		"open-sample-modal-simple": "Open sample modal (simple)",
+		"open-sample-modal-complex": "Open sample modal (complex)",
+		"sample-editor-command": "Sample editor command"
+	},
+	"interface": {
+		"msg-sample-ribbon-icon-clicked": "This is a notice!",
+		"msg-sample-command": "Woah!",
+		"sample-plugin-status-text": "Status Bar Text"
+	},
+	"plugin": {
+		"name": "Sample Plugin"
+	},
+	"setting": {
+		"option-setting1": "Setting #1",
+		"option-setting1-desc": "It's a secret",
+		"option-setting1-placeholder": "Enter your secretXXXX"
+	}
+}
