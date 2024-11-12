@@ -1,0 +1,27 @@
+{
+	"packages": {
+		".": {
+			"changelog-path": "CHANGELOG.md",
+			"release-type": "node",
+			"bump-minor-pre-major": true,
+			"bump-patch-for-minor-pre-major": true,
+			"draft": false,
+			"extra-files": [
+				{
+					"type": "json",
+					"path": ".release-please-manifest-beta.json",
+					"jsonpath": "$['.']"
+				},
+				{
+					"type": "json",
+					"path": "manifest.json",
+					"jsonpath": "$.version"
+				}
+			]
+		}
+	},
+	"pull-request-title-pattern": "chore: release ${version}",
+	"include-component-in-tag": false,
+	"include-v-in-tag": false,
+	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
