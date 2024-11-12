@@ -1,19 +1,19 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { t } from "./i18n";
-import type MyPlugin from "./main";
+import type Timestampy from "./main";
 
-export interface MyPluginSettings {
+export interface TimestampySettings {
 	mySetting: string;
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: TimestampySettings = {
 	mySetting: "default",
 };
 
-export class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+export class TimestampySettingTab extends PluginSettingTab {
+	plugin: Timestampy;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: Timestampy) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

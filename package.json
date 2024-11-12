@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "obsidian-timestampy",
 	"version": "0.1.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "An obsidian plugin to track last modified and created dates of notes",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

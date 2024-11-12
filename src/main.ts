@@ -1,17 +1,17 @@
 import { Plugin } from "obsidian";
 import {
 	DEFAULT_SETTINGS,
-	type MyPluginSettings,
-	SampleSettingTab,
+	type TimestampySettings,
+	TimestampySettingTab,
 } from "./settings";
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class Timestampy extends Plugin {
+	settings: TimestampySettings;
 
 	async onload() {
-		console.debug("loading Sample Plugin");
+		console.debug("loading Timestampy plugin");
 		await this.loadSettings();
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new TimestampySettingTab(this.app, this));
 	}
 
 	onunload() {}
