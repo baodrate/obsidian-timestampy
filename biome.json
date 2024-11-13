@@ -40,19 +40,5 @@
 		"formatter": {
 			"lineWidth": 1
 		}
-	},
-	"overrides": [
-		{
-			"include": [
-				".release-please-manifest.json",
-				"release-please-config.json",
-				"tsconfig.json"
-			],
-			"json": {
-				"formatter": {
-					"indentStyle": "space"
-				}
-			}
-		}
-	]
+	}
 }
