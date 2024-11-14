@@ -6,19 +6,20 @@
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
 			"draft": false,
-			"prerelease": true
+			"prerelease": true,
+			"versioning": "prerelease",
+			"prerelease-type": "beta",
+			"extra-files": [
+				{
+					"type": "json",
+					"path": "manifest-beta.json",
+					"jsonpath": "$.version"
+				}
+			]
 		}
 	},
 	"pull-request-title-pattern": "chore(beta): release ${version}",
-	"versioning": "prerelease",
 	"include-component-in-tag": false,
 	"include-v-in-tag": false,
-	"extra-files": [
-		{
-			"type": "json",
-			"path": "manifest-beta.json",
-			"jsonpath": "$.version"
-		}
-	],
 	"$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }
