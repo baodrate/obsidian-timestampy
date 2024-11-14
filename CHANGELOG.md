@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/baodrate/obsidian-timestampy/compare/1.4.1...1.4.2) (2024-11-14)
+
+
+### Bug Fixes
+
+* update logs4 ([e84af72](https://github.com/baodrate/obsidian-timestampy/commit/e84af720284390d30e9b3e0616b8f5abdcb27088))
+
 ## [1.4.1](https://github.com/baodrate/obsidian-timestampy/compare/1.4.0...1.4.1) (2024-11-14)
 
 
