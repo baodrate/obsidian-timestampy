@@ -2,7 +2,7 @@
 	"packages": {
 		".": {
 			"component": "obsidian-timestampy-beta",
-			"release-type": "node",
+			"release-type": "simple",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
 			"draft": false,

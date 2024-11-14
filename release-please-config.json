@@ -6,7 +6,7 @@
 			"release-type": "node",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
-			"draft": true,
+			"draft": false,
 			"extra-files": [
 				{
 					"type": "json",
