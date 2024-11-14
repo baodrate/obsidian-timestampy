@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/baodrate/obsidian-timestampy/compare/1.1.0...1.2.0) (2024-11-14)
+
+
+### Features
+
+* add logging ([1ca9c99](https://github.com/baodrate/obsidian-timestampy/commit/1ca9c999465a1adf95d4c5343fa85ccfd92536ef))
+* add settings ([fabf2f1](https://github.com/baodrate/obsidian-timestampy/commit/fabf2f1adf4153326904de8f8ec26ea8bb2a3070))
+
 ## [1.1.0](https://github.com/baodrate/obsidian-timestampy/compare/v1.0.0...1.1.0) (2024-11-14)
 
 
