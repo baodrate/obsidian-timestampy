@@ -35,6 +35,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
+		console.debug("Timestampy - TimestampySettingTab creating settings");
 		new Setting(containerEl)
 			.setName(t("setting.timestamp-format.name"))
 			.then((setting) => {

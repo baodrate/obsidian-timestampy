@@ -73,9 +73,6 @@ jobs:
                         --field content="${CONTENT:?}" \
                         --field branch="${PR_BRANCH}" \
                         --field sha="${SHA:?}"
-                git stash
-                git pull
-                gh pr merge --disable-auto --squash "${PR_NUMBER}"
 
     upload-build:
         runs-on: ubuntu-latest
