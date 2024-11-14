@@ -23,6 +23,8 @@ jobs:
             id: release
             with:
                 token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
+                config-file: release-please-config-beta.json
+                manifest-file: .release-please-manifest-beta.json
 
     upload-build:
         runs-on: ubuntu-latest

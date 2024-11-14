@@ -1,12 +1,13 @@
 {
 	"packages": {
 		".": {
-			"component": "obsidian-timestampy",
+			"component": "obsidian-timestampy-beta",
 			"changelog-path": "CHANGELOG.md",
 			"release-type": "node",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
-			"draft": true
+			"draft": false,
+			"prerelease": true
 		}
 	},
 	"include-component-in-tag": false,
@@ -14,7 +15,7 @@
 	"extra-files": [
 		{
 			"type": "json",
-			"path": "manifest.json",
+			"path": "manifest-beta.json",
 			"jsonpath": "$.version"
 		}
 	],
