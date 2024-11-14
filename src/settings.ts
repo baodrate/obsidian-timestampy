@@ -24,11 +24,13 @@ export class TimestampySettingTab extends PluginSettingTab {
 	plugin: Timestampy;
 
 	constructor(app: App, plugin: Timestampy) {
+		console.debug("Timestampy - TimestampySettingTab constructor()");
 		super(app, plugin);
 		this.plugin = plugin;
 	}
 
 	display(): void {
+		console.debug("Timestampy - TimestampySettingTab display()");
 		const { containerEl } = this;
 
 		containerEl.empty();
@@ -100,5 +102,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+
+		console.debug("Timestampy - TimestampySettingTab display() completed");
 	}
 }

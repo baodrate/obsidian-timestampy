@@ -15,12 +15,12 @@ export default class Timestampy extends Plugin {
 	}
 
 	async loadSettings() {
-		console.debug("loading Timestampy settings");
+		console.debug("Timestampy - loading settings");
 		this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
 	}
 
 	async saveSettings() {
-		console.debug("saving Timestampy settings");
+		console.debug("Timestampy - saving - settings");
 		await this.saveData(this.settings);
 	}
 }
