@@ -14,21 +14,26 @@ name: release-please-beta
 jobs:
     release-please:
         runs-on: ubuntu-latest
+        env:
+            release_please_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
         outputs:
             release_created: ${{ steps.release.outputs.release_created }}
             upload_url: ${{ steps.release.outputs.upload_url }}
             tag_name: ${{ steps.release.outputs.tag_name }}
         steps:
-          - if: ${{ ! secrets.RELEASE_PLEASE_TOKEN }}
+          - name: Missing token
+            if: ${{ env.release_please_token == '' }}
             run: |
-                echo 'the secret "RELEASE_PLEASE_TOKEN" has not been made'
-                echo 'go to "settings \> secrets \> actions" to create it'
-                echo 'falling back to "GITHUB_TOKEN"'
+                printf \
+                    '::warning title=%s::%s\n' \
+                    'the secret "RELEASE_PLEASE_TOKEN" has not been made' \
+                    'falling back to "GITHUB_TOKEN" (go to "settings > secrets > actions" to create RELEASE_PLEASE_TOKEN)'
 
-          - uses: googleapis/release-please-action@v4
+          - name: Create release
             id: release
+            uses: googleapis/release-please-action@v4
             with:
-                token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+                token: ${{ inputs.release_please_token || secrets.GITHUB_TOKEN }}
                 config-file: release-please-config-beta.json
                 manifest-file: .release-please-manifest-beta.json
 
@@ -38,12 +43,13 @@ jobs:
         if: ${{ needs.release-please.outputs.release_created }}
         steps:
           - uses: actions/checkout@v4
-            ref: ${{ needs.release-please.outputs.tag_name }}
+            with:
+                ref: ${{ needs.release-please.outputs.tag_name }}
 
           - name: Use Node.js
-            uses: actions/setup-node@v3
+            uses: actions/setup-node@v4
             with:
-                node-version: "18.x"
+                node-version: 18
 
           - name: Build plugin
             run: |
