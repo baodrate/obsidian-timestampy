@@ -102,5 +102,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					}),
 			);
+
+		console.debug("Timestampy - TimestampySettingTab display() completed");
 	}
 }
