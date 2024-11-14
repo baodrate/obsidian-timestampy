@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0-beta](https://github.com/baodrate/obsidian-timestampy/compare/1.2.1...1.3.0-beta) (2024-11-14)
+
+
+### Features
+
+* update logging ([f115934](https://github.com/baodrate/obsidian-timestampy/commit/f11593489795016426332d2a9c342a7dc6b4c7e8))
+
+
+### Bug Fixes
+
+* release-please package config ([88cc15c](https://github.com/baodrate/obsidian-timestampy/commit/88cc15cab7aa103a38eda0007acfd18f6740a61f))
+
 ## [1.2.1](https://github.com/baodrate/obsidian-timestampy/compare/1.2.0...1.2.1) (2024-11-14)
 
 
