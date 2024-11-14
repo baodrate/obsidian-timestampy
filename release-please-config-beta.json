@@ -1,21 +1,22 @@
 {
 	"packages": {
 		".": {
-			"component": "obsidian-timestampy",
-			"changelog-path": "CHANGELOG.md",
+			"component": "obsidian-timestampy-beta",
 			"release-type": "node",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
-			"draft": true
+			"draft": false,
+			"prerelease": true
 		}
 	},
-	"pull-request-title-pattern": "chore: release ${version}",
+	"pull-request-title-pattern": "chore(beta): release ${version}",
+	"versioning": "prerelease",
 	"include-component-in-tag": false,
 	"include-v-in-tag": false,
 	"extra-files": [
 		{
 			"type": "json",
-			"path": "manifest.json",
+			"path": "manifest-beta.json",
 			"jsonpath": "$.version"
 		}
 	],
