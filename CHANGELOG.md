@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.2.2-beta](https://github.com/baodrate/obsidian-timestampy/compare/1.2.1...1.2.2-beta) (2024-11-14)
+
+
+### Bug Fixes
+
+* even more release-please fixes ([8618c43](https://github.com/baodrate/obsidian-timestampy/commit/8618c43432904bad025bdbf46a14b33bb4c1fc7b))
+* more release-please fixes ([10ef596](https://github.com/baodrate/obsidian-timestampy/commit/10ef5963b983499ef9369d406cfe24c80cdbd796))
+* release-please package config ([88cc15c](https://github.com/baodrate/obsidian-timestampy/commit/88cc15cab7aa103a38eda0007acfd18f6740a61f))
+
 ## [1.2.1](https://github.com/baodrate/obsidian-timestampy/compare/1.2.0...1.2.1) (2024-11-14)
 
 
