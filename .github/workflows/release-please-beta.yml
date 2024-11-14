@@ -22,7 +22,7 @@ jobs:
             tag_name: ${{ steps.release.outputs.tag_name }}
         steps:
           - name: Missing token
-            if: ${{ env.release_please_token == '' }}
+            if: ${{ !env.release_please_token }}
             run: |
                 printf \
                     '::warning title=%s::%s\n' \
@@ -33,7 +33,7 @@ jobs:
             id: release
             uses: googleapis/release-please-action@v4
             with:
-                token: ${{ inputs.release_please_token || secrets.GITHUB_TOKEN }}
+                token: ${{ github.token }}
                 config-file: release-please-config-beta.json
                 manifest-file: .release-please-manifest-beta.json
 
@@ -58,5 +58,6 @@ jobs:
 
           - name: Upload release artifacts
             env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            run: gh release upload ${{ needs.release-please.outputs.tag_name }} ./main.js ./manifest.json ./styles.css
+                GITHUB_TOKEN: ${{ github.token }}
+                TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+            run: gh release upload ${{ env.TAG_NAME }} ./main.js ./manifest.json ./styles.css
