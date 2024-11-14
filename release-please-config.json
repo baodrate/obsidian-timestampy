@@ -10,6 +10,11 @@
 			"extra-files": [
 				{
 					"type": "json",
+					"path": ".release-please-manifest-beta.json",
+					"jsonpath": "$['.']"
+				},
+				{
+					"type": "json",
 					"path": "manifest.json",
 					"jsonpath": "$.version"
 				}
