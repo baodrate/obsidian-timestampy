@@ -2,6 +2,8 @@
 	"packages": {
 		".": {
 			"component": "obsidian-timestampy-beta",
+			"#": "can't disable changelog currently, see: https://github.com/googleapis/release-please/issues/2007",
+			"changelog-path": "CHANGELOG-beta.md",
 			"release-type": "simple",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
