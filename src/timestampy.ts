@@ -17,10 +17,12 @@ export default class Timestampy extends Plugin {
 	onunload() {}
 
 	async loadSettings() {
+		console.debug("loading Timestampy settings");
 		this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
 	}
 
 	async saveSettings() {
+		console.debug("saving Timestampy settings");
 		await this.saveData(this.settings);
 	}
 }
