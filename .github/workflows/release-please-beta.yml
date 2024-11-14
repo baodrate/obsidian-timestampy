@@ -9,7 +9,7 @@ permissions:
     contents: write
     pull-requests: write
 
-name: release-please
+name: release-please-beta
 
 jobs:
     release-please:
@@ -19,10 +19,16 @@ jobs:
             upload_url: ${{ steps.release.outputs.upload_url }}
             tag_name: ${{ steps.release.outputs.tag_name }}
         steps:
+          - if: ${{ ! secrets.RELEASE_PLEASE_TOKEN }}
+            run: |
+                echo 'the secret "RELEASE_PLEASE_TOKEN" has not been made'
+                echo 'go to "settings \> secrets \> actions" to create it'
+                echo 'falling back to "GITHUB_TOKEN"'
+
           - uses: googleapis/release-please-action@v4
             id: release
             with:
-                token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
+                token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
                 config-file: release-please-config-beta.json
                 manifest-file: .release-please-manifest-beta.json
 
@@ -31,7 +37,8 @@ jobs:
         needs: release-please
         if: ${{ needs.release-please.outputs.release_created }}
         steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v4
+            ref: ${{ needs.release-please.outputs.tag_name }}
 
           - name: Use Node.js
             uses: actions/setup-node@v3
