@@ -24,6 +24,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 	plugin: Timestampy;
 
 	constructor(app: App, plugin: Timestampy) {
+		console.debug("Timestampy - TimestampySettingTab constructor()");
 		super(app, plugin);
 		this.plugin = plugin;
 	}
