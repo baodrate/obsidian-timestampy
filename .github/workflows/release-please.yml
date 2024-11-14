@@ -42,7 +42,4 @@ jobs:
           - name: Upload release artifacts
             env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            run: |
-                gh release upload \
-                ${{ needs.release-please.outputs.release_created }} \
-                ./main.js ./manifest.json ./styles.css
+            run: gh release upload ${{ needs.release-please.outputs.tag_name }} ./main.js ./manifest.json ./styles.css
