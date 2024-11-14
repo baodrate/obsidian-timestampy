@@ -10,6 +10,7 @@ export default class Timestampy extends Plugin {
 
 	async onload() {
 		console.log("loading Timestampy plugin");
+		console.log("another log message");
 		await this.loadSettings();
 		this.addSettingTab(new TimestampySettingTab(this.app, this));
 	}
