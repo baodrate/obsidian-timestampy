@@ -29,6 +29,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
+		console.debug("Timestampy - TimestampySettingTab display()");
 		const { containerEl } = this;
 
 		containerEl.empty();
