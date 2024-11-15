@@ -16,6 +16,7 @@ export default class Timestampy extends Plugin {
 
 	async loadSettings() {
 		console.debug("Timestampy - loading settings");
+		console.debug("foobar");
 		this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData()) };
 	}
 
