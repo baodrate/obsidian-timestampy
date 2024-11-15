@@ -1,47 +1,41 @@
+name: Stage release
+
 on:
+    workflow_call:
+        inputs:
+            beta:
+                type: boolean
+                description: 'Make beta release'
+                default: false
+
     workflow_dispatch:
-
-    push:
-        branches:
-            - main
-
-permissions:
-    contents: write
-    pull-requests: write
-
-name: release-please
+        inputs:
+            beta:
+                type: boolean
+                description: 'Make beta release'
+                default: false
 
 jobs:
     release-please:
         runs-on: ubuntu-latest
-        env:
-            release_please_token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
         outputs:
             release_created: ${{ steps.release.outputs.release_created }}
             upload_url: ${{ steps.release.outputs.upload_url }}
             tag_name: ${{ steps.release.outputs.tag_name }}
             pr: ${{ steps.release.outputs.pr }}
         steps:
-          - name: Missing token
-            if: ${{ !env.release_please_token }}
-            run: |
-                printf \
-                    '::warning title=%s::%s\n' \
-                    'the secret "RELEASE_PLEASE_TOKEN" has not been made' \
-                    'falling back to "GITHUB_TOKEN" (go to "settings > secrets > actions" to create RELEASE_PLEASE_TOKEN)'
-
           - name: Create release
             id: release
             uses: googleapis/release-please-action@v4
             with:
-                token: ${{ github.token }}
-                config-file: release-please-config.json
-                manifest-file: .release-please-manifest.json
+                token: ${{ secrets.GITHUB_TOKEN }}
+                config-file: ${{ inputs.beta && 'release-please-config-beta.json' || 'release-please-config.json' }}
+                manifest-file: ${{ inputs.beta && '.release-please-manifest-beta.json' || '.release-please-manifest.json' }}
 
     version-bump:
         runs-on: ubuntu-latest
         needs: release-please
-        if: ${{ !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
+        if: ${{ !inputs.beta && !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
         steps:
           - uses: actions/checkout@v4
 
@@ -52,7 +46,7 @@ jobs:
 
           - name: Bump version
             env:
-                GITHUB_TOKEN: ${{ github.token }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
                 PR_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
                 FILE_TO_COMMIT: "versions.json"
@@ -75,7 +69,7 @@ jobs:
                     --field branch="${PR_BRANCH:?}" \
                     --field sha="${SHA:?}"
 
-    upload-build:
+    artifacts:
         runs-on: ubuntu-latest
         needs: release-please
         if: ${{ needs.release-please.outputs.release_created }}
@@ -96,6 +90,6 @@ jobs:
 
           - name: Upload release artifacts
             env:
-                GITHUB_TOKEN: ${{ github.token }}
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                 TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
             run: gh release upload ${{ env.TAG_NAME }} ./main.js ./manifest.json ./styles.css
