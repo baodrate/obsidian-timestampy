@@ -1,21 +1,21 @@
 name: Auto-stage release
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-    release:
-        uses: ./.github/workflows/release-please.yml
-        secrets: inherit
+  release:
+    uses: ./.github/workflows/release-please.yml
+    secrets: inherit
 
-    beta-release:
-        uses: ./.github/workflows/release-please.yml
-        with:
-            beta: true
-        secrets: inherit
+  beta-release:
+    uses: ./.github/workflows/release-please.yml
+    with:
+      beta: true
+    secrets: inherit

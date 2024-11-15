@@ -1,6 +1,6 @@
 import { type App, PluginSettingTab, Setting } from "obsidian";
 import { t } from "./i18n";
-import type Timestampy from "./timestampy";
+import type TimestampyPlugin from "./timestampy";
 
 export interface TimestampySettings {
 	mySetting: string;
@@ -11,9 +11,9 @@ export const DEFAULT_SETTINGS: TimestampySettings = {
 };
 
 export class TimestampySettingTab extends PluginSettingTab {
-	plugin: Timestampy;
+	plugin: TimestampyPlugin;
 
-	constructor(app: App, plugin: Timestampy) {
+	constructor(app: App, plugin: TimestampyPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
