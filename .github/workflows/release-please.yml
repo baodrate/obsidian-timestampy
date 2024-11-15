@@ -1,101 +1,101 @@
 name: Stage release
 
 on:
-    workflow_call:
-        inputs:
-            beta:
-                type: boolean
-                description: 'Make beta release'
-                default: false
+  workflow_call:
+    inputs:
+      beta:
+        type: boolean
+        description: "Make beta release"
+        default: false
 
-    workflow_dispatch:
-        inputs:
-            beta:
-                type: boolean
-                description: 'Make beta release'
-                default: false
+  workflow_dispatch:
+    inputs:
+      beta:
+        type: boolean
+        description: "Make beta release"
+        default: false
 
 run-name: Stage ${{ inputs.beta && 'beta ' || '' }}release
 
 permissions:
-    contents: write
-    pull-requests: write
+  contents: write
+  pull-requests: write
 
 jobs:
-    release-please:
-        runs-on: ubuntu-latest
-        outputs:
-            release_created: ${{ steps.release.outputs.release_created }}
-            upload_url: ${{ steps.release.outputs.upload_url }}
-            tag_name: ${{ steps.release.outputs.tag_name }}
-            pr: ${{ steps.release.outputs.pr }}
-        steps:
-          - name: Create release
-            id: release
-            uses: googleapis/release-please-action@v4
-            with:
-                token: ${{ secrets.GITHUB_TOKEN }}
-                config-file: ${{ inputs.beta && 'release-please-config-beta.json' || 'release-please-config.json' }}
-                manifest-file: ${{ inputs.beta && '.release-please-manifest-beta.json' || '.release-please-manifest.json' }}
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      upload_url: ${{ steps.release.outputs.upload_url }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      pr: ${{ steps.release.outputs.pr }}
+    steps:
+      - name: Create release
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: ${{ inputs.beta && 'release-please-config-beta.json' || 'release-please-config.json' }}
+          manifest-file: ${{ inputs.beta && '.release-please-manifest-beta.json' || '.release-please-manifest.json' }}
 
-    version-bump:
-        runs-on: ubuntu-latest
-        needs: release-please
-        if: ${{ !inputs.beta && !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
-        steps:
-          - uses: actions/checkout@v4
+  version-bump:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ !inputs.beta && !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
 
-          - name: Use Node.js
-            uses: actions/setup-node@v4
-            with:
-                node-version: 18
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-          - name: Bump version
-            env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
-                PR_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
-                FILE_TO_COMMIT: "versions.json"
+      - name: Bump version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
+          PR_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
+          FILE_TO_COMMIT: "versions.json"
 
-            run: |
-                gh pr checkout "${PR_NUMBER:?}"
+        run: |
+          gh pr checkout "${PR_NUMBER:?}"
 
-                # `git add ...` in `version` script requires git user configured; it won't actually be used
-                git config --local user.name "${GITHUB_ACTOR:?}"
-                git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
-                npm run version
+          # `git add ...` in `version` script requires git user configured; it won't actually be used
+          git config --local user.name "${GITHUB_ACTOR:?}"
+          git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
+          npm run version
 
-                git add "${FILE_TO_COMMIT:?}" && git diff --staged --quiet && exit 0
-                # commit using github API so commit is signed
-                SHA=$(gh api "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" --jq .sha)
-                CONTENT=$(base64 "${FILE_TO_COMMIT:?}")
-                gh api --method PUT "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" \
-                    --field message="chore: bump ${FILE_TO_COMMIT:?}" \
-                    --field content="${CONTENT:?}" \
-                    --field branch="${PR_BRANCH:?}" \
-                    --field sha="${SHA:?}"
+          git add "${FILE_TO_COMMIT:?}" && git diff --staged --quiet && exit 0
+          # commit using github API so commit is signed
+          SHA=$(gh api "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" --jq .sha)
+          CONTENT=$(base64 "${FILE_TO_COMMIT:?}")
+          gh api --method PUT "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" \
+            --field message="chore: bump ${FILE_TO_COMMIT:?}" \
+            --field content="${CONTENT:?}" \
+            --field branch="${PR_BRANCH:?}" \
+            --field sha="${SHA:?}"
 
-    artifacts:
-        runs-on: ubuntu-latest
-        needs: release-please
-        if: ${{ needs.release-please.outputs.release_created }}
-        steps:
-          - uses: actions/checkout@v4
-            with:
-                ref: ${{ needs.release-please.outputs.tag_name }}
+  artifacts:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
 
-          - name: Use Node.js
-            uses: actions/setup-node@v4
-            with:
-                node-version: 18
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-          - name: Build plugin
-            run: |
-                npm install
-                npm run build
+      - name: Build plugin
+        run: |
+          npm install
+          npm run build
 
-          - name: Upload release artifacts
-            env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
-            run: gh release upload ${{ env.TAG_NAME }} ./main.js ./manifest.json ./styles.css
+      - name: Upload release artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: gh release upload ${{ env.TAG_NAME }} ./main.js ./manifest.json ./styles.css
