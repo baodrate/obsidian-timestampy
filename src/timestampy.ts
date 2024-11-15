@@ -12,6 +12,7 @@ export default class TimestampyPlugin extends Plugin {
 		console.debug("loading Timestampy plugin");
 		await this.loadSettings();
 		this.addSettingTab(new TimestampySettingTab(this.app, this));
+		console.debug( "done loading Timestampy plugin" );
 	}
 
 	async onunload() {
