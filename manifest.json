@@ -5,5 +5,7 @@
 	"minAppVersion": "1.0.0",
 	"description": "An obsidian plugin to track last modified and created dates of notes",
 	"author": "@baodrate",
+	"authorUrl": "https://github.com/baodrate",
+	"fundingUrl": "https://github.com/sponsors/baodrate",
 	"isDesktopOnly": false
 }

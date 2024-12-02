@@ -12,6 +12,11 @@
 	},
 	"keywords": [],
 	"author": "@baodrate",
+	"url": "https://github.com/baodrate",
+	"repository": "github:baodrate/obsidian-timestampy",
+	"homepage": "https://github.com/baodrate/obsidian-timestampy#readme",
+	"bugs": "https://github.com/baodrate/obsidian-timestampy/issues",
+	"funding": "https://github.com/sponsors/baodrate",
 	"license": "MIT",
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
