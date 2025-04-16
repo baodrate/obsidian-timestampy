@@ -1,8 +1,8 @@
 import { Plugin } from "obsidian";
 import {
 	DEFAULT_SETTINGS,
-	TimestampySettingTab,
 	type TimestampySettings,
+	TimestampySettingTab,
 } from "./settings";
 
 export default class TimestampyPlugin extends Plugin {

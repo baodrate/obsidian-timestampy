@@ -45,10 +45,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
+          cache: 'pnpm'
 
       - name: Bump version
         env:
@@ -63,7 +67,7 @@ jobs:
           # `git add ...` in `version` script requires git user configured; it won't actually be used
           git config --local user.name "${GITHUB_ACTOR:?}"
           git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
-          npm run version
+          pnpm run version
 
           git add "${FILE_TO_COMMIT:?}" && git diff --staged --quiet && exit 0
           # commit using github API so commit is signed
@@ -84,15 +88,19 @@ jobs:
         with:
           ref: ${{ needs.release-please.outputs.tag_name }}
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
+          cache: 'pnpm'
 
       - name: Build plugin
         run: |
-          npm install
-          npm run build
+          pnpm install
+          pnpm run build
 
       - name: Upload release artifacts
         env:
