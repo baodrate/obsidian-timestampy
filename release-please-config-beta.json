@@ -1,22 +1,17 @@
 {
 	"packages": {
 		".": {
+			"component": "beta",
 			"#": "can't disable changelog currently, see: https://github.com/googleapis/release-please/issues/2007",
 			"changelog-path": "CHANGELOG-beta.md",
-			"release-type": "simple",
+			"release-type": "node",
 			"bump-minor-pre-major": true,
 			"bump-patch-for-minor-pre-major": true,
 			"draft": false,
 			"prerelease": true,
 			"versioning": "prerelease",
 			"prerelease-type": "beta",
-			"extra-files": [
-				{
-					"type": "json",
-					"path": "manifest-beta.json",
-					"jsonpath": "$.version"
-				}
-			]
+			"extra-files": []
 		}
 	},
 	"pull-request-title-pattern": "chore: beta release ${version}",
