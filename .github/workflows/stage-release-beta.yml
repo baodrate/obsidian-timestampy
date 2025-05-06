@@ -1,9 +1,11 @@
-name: Auto-stage release
+name: Stage beta release
 
 on:
   push:
     branches:
       - main
+
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -13,9 +15,5 @@ jobs:
   release:
     uses: ./.github/workflows/release-please.yml
     secrets: inherit
-
-  beta-release:
-    uses: ./.github/workflows/release-please.yml
     with:
       beta: true
-    secrets: inherit
