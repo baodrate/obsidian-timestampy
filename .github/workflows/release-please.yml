@@ -24,7 +24,10 @@ permissions:
 env:
     CHANGELOG_FILE: "CHANGELOG.md"
     CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
+    RELEASE_PLEASE_COMPONENT_STABLE: "stable"
+    RELEASE_PLEASE_COMPONENT_BETA: "beta"
     VERSIONS_FILE: "versions.json"
+    ACTIONS_BOT_LOGIN: "app/github-actions"
 
 jobs:
   release-please:
@@ -131,3 +134,27 @@ jobs:
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
         run: |
           gh release edit "${{ env.TAG_NAME }}" --title="${{ env.TAG_NAME }}"
+
+  close-beta-pr:
+    runs-on: ubuntu-latest
+    needs: [release-please, artifacts]
+    if: ${{ !inputs.beta && needs.release-please.outputs.release_created }}
+    steps:
+      - name: Upload release artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          STABLE_PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
+          BASE_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).baseBranchName }}
+        run: |
+          PR=$(
+            gh pr list \
+            -R "${OWNER:?}/${REPO:?}" \
+            -s open \
+            -A "${ACTIONS_BOT_LOGIN:?}" \
+            -H "release-please--branches--${BASE_BRANCH:?}--components--${RELEASE_PLEASE_COMPONENT_BETA:?}" \
+            --json number \
+            --jq 'if length == 1 then .[0].number else error("found \(length) values") end'
+          ) && [ -n "$PR" ] || { echo "No beta release PR found" >&2; exit 0; }
+          gh pr close "${PR:?}" --delete-branch --comment "closed in favor of stable release: #${STABLE_PR_NUMBER:?}"
