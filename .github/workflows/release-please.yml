@@ -107,6 +107,7 @@ jobs:
         run: |
           pnpm install
           pnpm run build
+          pnpm run version
 
       - name: Upload release artifacts
         env:
