@@ -1,0 +1,101 @@
+name: Stage stable release
+
+env:
+    CHANGELOG_FILE: "CHANGELOG.md"
+    CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
+    RELEASE_PLEASE_COMPONENT_STABLE: "stable"
+    RELEASE_PLEASE_COMPONENT_BETA: "beta"
+    VERSIONS_FILE: "versions.json"
+    ACTIONS_BOT_LOGIN: "app/github-actions"
+    BASE_BRANCH: "main"
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    uses: ./.github/workflows/release-please.yml
+    secrets: inherit
+
+  stable-pr-changes:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      # avoid setup-node cache failure; see: https://github.com/actions/setup-node/issues/1137
+      - name: Verify PNPM Cache Directory
+        run: |
+          PNPM_STORE_PATH="$( pnpm store path --silent )"
+          [ -d "$PNPM_STORE_PATH" ] || mkdir -vp "$PNPM_STORE_PATH"
+
+      - name: Bump version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
+        run: |
+          gh pr checkout "${PR_NUMBER:?}"
+
+          get_file_sha() {
+            BRANCH=${1:?}
+            FILEPATH=${2:?}
+            SHA=$(
+              gh api \
+              -X GET \
+              "/repos/{owner}/{repo}/contents/${FILEPATH:?}" \
+              -F "ref=${BRANCH:?}" \
+              --jq '.sha'
+            )
+            [ -n "${SHA}" ] || return 1
+            printf '%s\n' "${SHA}"
+          }
+
+          update_file() {
+            BRANCH=${1:?}
+            TARGET_FILEPATH=${2:?}
+            ORIG_SHA=${3:?}
+
+            git add "${TARGET_FILEPATH:?}"
+            git diff --staged --quiet && return || true
+            # commit using github API so commit is signed; see: https://github.com/actions/runner/issues/667
+            CONTENT=$(base64 "${TARGET_FILEPATH:?}")
+            gh api -X PUT "/repos/{owner}/{repo}/contents/${TARGET_FILEPATH:?}" \
+              --field message="chore: bump ${TARGET_FILEPATH:?}" \
+              --field content="${CONTENT:?}" \
+              --field branch="${BRANCH:?}" \
+              --field sha="${ORIG_SHA:?}"
+          }
+
+          STABLE_PR_BRANCH="release-please--branches--${BASE_BRANCH:?}--components--${RELEASE_PLEASE_COMPONENT_STABLE:?}"
+
+          # `git add ...` in `version` script requires git user configured; it won't actually be used
+          VERSIONS_ORIG_SHA=$(get_file_sha "${STABLE_PR_BRANCH:?}" "${VERSIONS_FILE:?}")
+          git config --local user.name "${GITHUB_ACTOR:?}"
+          git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
+          pnpm run version
+          update_file "${STABLE_PR_BRANCH:?}" "${VERSIONS_FILE:?}" "${VERSIONS_ORIG_SHA:?}"
+
+          head -n20 "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
+
+          # replace beta changelog with contents of stable changelog
+          CHANGELOG_ORIG_SHA=$(get_file_sha "${STABLE_PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}")
+          cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
+          update_file "${STABLE_PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}" "${CHANGELOG_ORIG_SHA:?}"
