@@ -5,6 +5,19 @@
 > This file has to exist because release-please makes a changelog file mandatory.
 > see: https://github.com/googleapis/release-please/issues/2007
 
+## [0.1.1-beta.2](https://github.com/baodrate/obsidian-timestampy/compare/0.1.1-beta.1...0.1.1-beta.2) (2025-05-06)
+
+
+### Features
+
+* **ci:** update release-please configuration to match BRAT behavior ([39978d4](https://github.com/baodrate/obsidian-timestampy/commit/39978d46cf0cbfd298664453b7fa5ac8dc3ec70c))
+
+
+### Bug Fixes
+
+* **ci:** manifest-beta.json is deprecated per BRAT v1.1.0 ([5caca31](https://github.com/baodrate/obsidian-timestampy/commit/5caca31370512593c160781835e6f00a164f77ad))
+* user semver in version-bump.mjs ([1f780b2](https://github.com/baodrate/obsidian-timestampy/commit/1f780b2f0790845f2ddd9383e1d7b60613625753))
+
 ## [0.1.1-beta.1](https://github.com/baodrate/obsidian-timestampy/compare/0.1.1-beta...0.1.1-beta.1) (2025-05-06)
 
 
