@@ -1,0 +1,99 @@
+name: Stage stable release
+
+env:
+    CHANGELOG_FILE: "CHANGELOG.md"
+    CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
+    VERSIONS_FILE: "versions.json"
+    ACTIONS_BOT_LOGIN: "app/github-actions"
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    uses: ./.github/workflows/release-please.yml
+    secrets: inherit
+
+  pr-changes:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      # avoid setup-node cache failure; see: https://github.com/actions/setup-node/issues/1137
+      - name: Verify PNPM Cache Directory
+        run: |
+          PNPM_STORE_PATH="$( pnpm store path --silent )"
+          [ -d "$PNPM_STORE_PATH" ] || mkdir -vp "$PNPM_STORE_PATH"
+
+      - name: Modify PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
+        run: |
+          gh pr checkout "${PR_NUMBER:?}" &&
+            PR_BRANCH=$(gh pr view --json headRefName --jq .headRefName) &&
+            [ -n "${PR_BRANCH}" ] ||
+            { echo "Failed to checkout PR: ${PR_NUMBER} (${PR_BRANCH})" >&2; exit 1; }
+
+          get_file_sha_gh() {
+            BRANCH=${1:?}
+            FILEPATH=${2:?}
+            SHA=$(gh api -X GET "/repos/{owner}/{repo}/contents/${FILEPATH:?}" -F "ref=${BRANCH:?}" --jq '.sha')
+            [ -n "${SHA}" ] || return 1
+            printf '%s\n' "${SHA}"
+          }
+
+          get_file_sha_local() {
+            FILEPATH=${1:?}
+            git hash-object -t blob -- "${FILEPATH:?}"
+          }
+
+          update_file() {
+            BRANCH=${1:?}
+            TARGET_FILEPATH=${2:?}
+            ORIG_SHA=$(get_file_sha_gh "${BRANCH:?}" "${TARGET_FILEPATH:?}")
+
+            NEW_SHA=$(get_file_sha_local "${TARGET_FILEPATH:?}")
+            if [ "${NEW_SHA}" = "${ORIG_SHA}" ]; then
+              echo "file in branch matches local file, nothing to do for: ${TARGET_FILEPATH}"
+              return 0
+            fi
+
+            # commit using github API so commit is signed; see: https://github.com/actions/runner/issues/667
+            CONTENT=$(base64 "${TARGET_FILEPATH:?}")
+            gh api -X PUT "/repos/{owner}/{repo}/contents/${TARGET_FILEPATH:?}" \
+              --field message="chore: bump ${TARGET_FILEPATH:?}" \
+              --field content="${CONTENT:?}" \
+              --field branch="${BRANCH:?}" \
+              --field sha="${ORIG_SHA:?}"
+          }
+
+          # update versions.json in PR
+          # `git add ...` in `version` script requires git user configured; it won't actually be used
+          git config --local user.name "${GITHUB_ACTOR:?}"
+          git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
+          pnpm run version
+          update_file "${PR_BRANCH:?}" "${VERSIONS_FILE:?}"
+
+          # replace beta changelog with contents of stable changelog
+          cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
+          update_file "${PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}"
