@@ -42,10 +42,14 @@ export class TimestampySettingTab extends PluginSettingTab {
 							frag.appendText(t("setting.timestamp-format.desc"));
 							frag.createEl("br");
 							frag.appendText(
-								i18next.t("plugins.daily-notes.label-refer-to-syntax"),
+								window.i18next.t(
+									"plugins.daily-notes.label-refer-to-syntax",
+								),
 							);
 							frag.createEl("a", {
-								text: i18next.t("plugins.daily-notes.label-syntax-link"),
+								text: window.i18next.t(
+									"plugins.daily-notes.label-syntax-link",
+								),
 								attr: {
 									href: "https://momentjs.com/docs/#/displaying/format/",
 									target: "_blank",
@@ -54,9 +58,13 @@ export class TimestampySettingTab extends PluginSettingTab {
 							});
 							frag.createEl("br");
 							frag.appendText(
-								i18next.t("plugins.daily-notes.label-syntax-live-preview"),
+								window.i18next.t(
+									"plugins.daily-notes.label-syntax-live-preview",
+								),
 							);
-							mf.setSampleEl(frag.createEl("b", { cls: "u-pop" }));
+							mf.setSampleEl(
+								frag.createEl("b", { cls: "u-pop" }),
+							);
 							frag.createEl("br");
 						}),
 					);
