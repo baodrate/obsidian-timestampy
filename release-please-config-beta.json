@@ -10,13 +10,7 @@
 			"prerelease": true,
 			"versioning": "prerelease",
 			"prerelease-type": "beta",
-			"extra-files": [
-				{
-					"type": "json",
-					"path": "manifest.json",
-					"jsonpath": "$.version"
-				}
-			]
+			"extra-files": []
 		}
 	},
 	"pull-request-title-pattern": "chore: beta release ${version}",
