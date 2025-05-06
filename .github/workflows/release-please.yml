@@ -7,6 +7,13 @@ on:
         type: boolean
         description: "Make beta release"
         default: false
+    outputs:
+      release_created:
+        description: "`true` if a root component release was created, `false` otherwise"
+        value: ${{ jobs.release-please.outputs.release_created }}
+      pr:
+        description: "A JSON string of the PullRequest object (unset if no release created)"
+        value: ${{ jobs.release-please.outputs.pr }}
 
   workflow_dispatch:
     inputs:
@@ -14,8 +21,6 @@ on:
         type: boolean
         description: "Make beta release"
         default: false
-
-run-name: Stage ${{ inputs.beta && 'beta ' || '' }}release
 
 permissions:
   contents: write
@@ -25,6 +30,8 @@ env:
     CHANGELOG_FILE: "CHANGELOG.md"
     CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
     VERSIONS_FILE: "versions.json"
+    RELEASE_PLEASE_CONFIG_FILE: ${{ inputs.beta && 'release-please-config-beta.json' || 'release-please-config.json' }}
+    RELEASE_PLEASE_MANIFEST_FILE: ${{ inputs.beta && '.release-please-manifest-beta.json' || '.release-please-manifest.json' }}
 
 jobs:
   release-please:
@@ -40,59 +47,8 @@ jobs:
         uses: googleapis/release-please-action@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          config-file: ${{ inputs.beta && 'release-please-config-beta.json' || 'release-please-config.json' }}
-          manifest-file: ${{ inputs.beta && '.release-please-manifest-beta.json' || '.release-please-manifest.json' }}
-
-  stable-pr-changes:
-    runs-on: ubuntu-latest
-    needs: release-please
-    if: ${{ !inputs.beta && !needs.release-please.outputs.release_created && needs.release-please.outputs.pr }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'pnpm'
-
-      # avoid setup-node cache failure; see: https://github.com/actions/setup-node/issues/1137
-      - name: Verify PNPM Cache Directory
-        run: |
-          PNPM_STORE_PATH="$( pnpm store path --silent )"
-          [ -d "$PNPM_STORE_PATH" ] || mkdir -vp "$PNPM_STORE_PATH"
-
-      - name: Bump version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
-          PR_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
-        run: |
-          gh pr checkout "${PR_NUMBER:?}"
-
-          # `git add ...` in `version` script requires git user configured; it won't actually be used
-          git config --local user.name "${GITHUB_ACTOR:?}"
-          git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
-          pnpm run version
-
-          # update beta changelog
-          cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
-
-          for FILE_TO_COMMIT in "${VERSIONS_FILE:?}" "${CHANGELOG_FILE_BETA:?}"; do
-              git add "${FILE_TO_COMMIT:?}"
-              git diff --staged --quiet && continue || true
-              # commit using github API so commit is signed
-              SHA=$(gh api "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" --jq .sha)
-              CONTENT=$(base64 "${FILE_TO_COMMIT:?}")
-              gh api --method PUT "/repos/{owner}/{repo}/contents/${FILE_TO_COMMIT:?}" \
-                --field message="chore: bump ${FILE_TO_COMMIT:?}" \
-                --field content="${CONTENT:?}" \
-                --field branch="${PR_BRANCH:?}" \
-                --field sha="${SHA:?}"
-          done
+          config-file: ${{ env.RELEASE_PLEASE_CONFIG_FILE }}
+          manifest-file: ${{ env.RELEASE_PLEASE_MANIFEST_FILE }}
 
   artifacts:
     runs-on: ubuntu-latest
