@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.5](https://github.com/baodrate/obsidian-timestampy/compare/0.1.4...0.1.5) (2025-05-07)
+
+
+### Features
+
+* close beta PR on stable release ([fa0fa30](https://github.com/baodrate/obsidian-timestampy/commit/fa0fa30f438fb619e9b7c9323a04f97a26916726))
+
+
+### Bug Fixes
+
+* testing4 ([400528e](https://github.com/baodrate/obsidian-timestampy/commit/400528ea9ef9d9baf52c9e9d751a9718e9b7a39e))
+
 ## [0.1.4](https://github.com/baodrate/obsidian-timestampy/compare/0.1.3...0.1.4) (2025-05-06)
 
 
