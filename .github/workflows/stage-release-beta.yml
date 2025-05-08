@@ -12,7 +12,7 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
+  release-please:
     uses: ./.github/workflows/release-please.yml
     secrets: inherit
     with:
