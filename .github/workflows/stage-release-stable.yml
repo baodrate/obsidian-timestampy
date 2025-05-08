@@ -93,8 +93,6 @@ jobs:
           pnpm run version
           update_file "${STABLE_PR_BRANCH:?}" "${VERSIONS_FILE:?}" "${VERSIONS_ORIG_SHA:?}"
 
-          head -n20 "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
-
           # replace beta changelog with contents of stable changelog
           CHANGELOG_ORIG_SHA=$(get_file_sha "${STABLE_PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}")
           cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
