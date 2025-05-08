@@ -3,11 +3,8 @@ name: Stage stable release
 env:
     CHANGELOG_FILE: "CHANGELOG.md"
     CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
-    RELEASE_PLEASE_COMPONENT_STABLE: "stable"
-    RELEASE_PLEASE_COMPONENT_BETA: "beta"
     VERSIONS_FILE: "versions.json"
     ACTIONS_BOT_LOGIN: "app/github-actions"
-    BASE_BRANCH: "main"
 
 on:
   push:
@@ -47,34 +44,40 @@ jobs:
           PNPM_STORE_PATH="$( pnpm store path --silent )"
           [ -d "$PNPM_STORE_PATH" ] || mkdir -vp "$PNPM_STORE_PATH"
 
-      - name: Bump version
+      - name: Modify PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
         run: |
-          gh pr checkout "${PR_NUMBER:?}"
+          gh pr checkout "${PR_NUMBER:?}" &&
+            PR_BRANCH=$(gh pr view --json headRefName --jq .headRefName) &&
+            [ -n "${PR_BRANCH}" ] ||
+            { echo "Failed to checkout PR: ${PR_NUMBER} (${PR_BRANCH})" >&2; exit 1; }
 
-          get_file_sha() {
+          get_file_sha_gh() {
             BRANCH=${1:?}
             FILEPATH=${2:?}
-            SHA=$(
-              gh api \
-              -X GET \
-              "/repos/{owner}/{repo}/contents/${FILEPATH:?}" \
-              -F "ref=${BRANCH:?}" \
-              --jq '.sha'
-            )
+            SHA=$(gh api -X GET "/repos/{owner}/{repo}/contents/${FILEPATH:?}" -F "ref=${BRANCH:?}" --jq '.sha')
             [ -n "${SHA}" ] || return 1
             printf '%s\n' "${SHA}"
+          }
+
+          get_file_sha_local() {
+            FILEPATH=${1:?}
+            git hash-object -t blob -- "${FILEPATH:?}"
           }
 
           update_file() {
             BRANCH=${1:?}
             TARGET_FILEPATH=${2:?}
-            ORIG_SHA=${3:?}
+            ORIG_SHA=$(get_file_sha_gh "${BRANCH:?}" "${TARGET_FILEPATH:?}")
 
-            git add "${TARGET_FILEPATH:?}"
-            git diff --staged --quiet && return || true
+            NEW_SHA=$(get_file_sha_local "${TARGET_FILEPATH:?}")
+            if [ "${NEW_SHA}" = "${ORIG_SHA}" ]; then
+              echo "file in branch matches local file, nothing to do for: ${TARGET_FILEPATH}"
+              return 0
+            fi
+
             # commit using github API so commit is signed; see: https://github.com/actions/runner/issues/667
             CONTENT=$(base64 "${TARGET_FILEPATH:?}")
             gh api -X PUT "/repos/{owner}/{repo}/contents/${TARGET_FILEPATH:?}" \
@@ -84,16 +87,13 @@ jobs:
               --field sha="${ORIG_SHA:?}"
           }
 
-          STABLE_PR_BRANCH="release-please--branches--${BASE_BRANCH:?}--components--${RELEASE_PLEASE_COMPONENT_STABLE:?}"
-
+          # update versions.json in PR
           # `git add ...` in `version` script requires git user configured; it won't actually be used
-          VERSIONS_ORIG_SHA=$(get_file_sha "${STABLE_PR_BRANCH:?}" "${VERSIONS_FILE:?}")
           git config --local user.name "${GITHUB_ACTOR:?}"
           git config --local user.email "${GITHUB_ACTOR_ID:?}+${GITHUB_ACTOR:?}@users.noreply.github.com"
           pnpm run version
-          update_file "${STABLE_PR_BRANCH:?}" "${VERSIONS_FILE:?}" "${VERSIONS_ORIG_SHA:?}"
+          update_file "${PR_BRANCH:?}" "${VERSIONS_FILE:?}"
 
           # replace beta changelog with contents of stable changelog
-          CHANGELOG_ORIG_SHA=$(get_file_sha "${STABLE_PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}")
           cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
-          update_file "${STABLE_PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}" "${CHANGELOG_ORIG_SHA:?}"
+          update_file "${PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}"
