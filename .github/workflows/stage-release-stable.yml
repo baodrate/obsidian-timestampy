@@ -97,3 +97,29 @@ jobs:
           # replace beta changelog with contents of stable changelog
           cp -fv "${CHANGELOG_FILE:?}" "${CHANGELOG_FILE_BETA:?}"
           update_file "${PR_BRANCH:?}" "${CHANGELOG_FILE_BETA:?}"
+
+  close-beta-pr:
+    runs-on: ubuntu-latest
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Close beta PR on stable release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.release_tag }}
+          RELEASE_URL: ${{ needs.release-please.outputs.release_url }}
+        run: |
+          PR=$(
+            gh pr list \
+            -R "${OWNER:?}/${REPO:?}" \
+            -s open \
+            -A "${ACTIONS_BOT_LOGIN:?}" \
+            -H "release-please--branches--${BASE_BRANCH:?}--components--${RELEASE_PLEASE_COMPONENT_BETA:?}" \
+            --json number \
+            --jq 'if length == 1 then .[0].number else error("found \(length) values") end'
+          ) && [ -n "$PR" ] || { echo "No beta release PR found" >&2; exit 0; }
+          gh pr close "${PR:?}" --delete-branch --comment "closed in favor of stable release ${RELEASE_TAG}: ${RELEASE_URL}"
