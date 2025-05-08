@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/baodrate/obsidian-timestampy/compare/0.1.9...0.1.10) (2025-05-08)
+
+
+### Bug Fixes
+
+* git checkout for close-pr ([94c0c26](https://github.com/baodrate/obsidian-timestampy/commit/94c0c262f66a3b982771a4f314dd3dbfedf3675b))
+
 ## [0.1.9](https://github.com/baodrate/obsidian-timestampy/compare/0.1.8...0.1.9) (2025-05-08)
 
 
