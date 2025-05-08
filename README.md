@@ -2,6 +2,8 @@
 
 An obsidian plugin to track last modified and created dates of notes
 
+test1
+
 ## Installation
 
 ### Obsidian Marketplace (recommended)
