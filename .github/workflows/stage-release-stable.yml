@@ -51,7 +51,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ fromJSON(needs.release-please.outputs.pr).number }}
-          PR_BRANCH: ${{ fromJSON(needs.release-please.outputs.pr).headBranchName }}
         run: |
           set -x
           gh pr checkout "${PR_NUMBER:?}"
@@ -107,6 +106,8 @@ jobs:
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
     steps:
+      - uses: actions/checkout@v4
+
       - name: Close beta PR on stable release
         env:
           DEBUG: ${{ toJSON(needs.release-please.outputs) }}
@@ -116,6 +117,7 @@ jobs:
           RELEASE_TAG: ${{ needs.release-please.outputs.release_tag }}
           RELEASE_URL: ${{ needs.release-please.outputs.release_url }}
         run: |
+          set -x
           PR=$(
             gh pr list \
             -R "${OWNER:?}/${REPO:?}" \
