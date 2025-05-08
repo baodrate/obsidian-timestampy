@@ -11,6 +11,12 @@ on:
       release_created:
         description: "`true` if a root component release was created, `false` otherwise"
         value: ${{ jobs.release-please.outputs.release_created }}
+      release_tag:
+        description: "Tag of the created release"
+        value: ${{ jobs.release-please.outputs.tag_name }}
+      release_url:
+        description: "URL of the created release"
+        value: ${{ jobs.release-please.outputs.html_url }}
       pr:
         description: "A JSON string of the PullRequest object (unset if no release created)"
         value: ${{ jobs.release-please.outputs.pr }}
@@ -40,6 +46,7 @@ jobs:
       release_created: ${{ steps.release.outputs.release_created }}
       upload_url: ${{ steps.release.outputs.upload_url }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      html_url: ${{ steps.release.outputs.html_url }}
       pr: ${{ steps.release.outputs.pr }}
     steps:
       - name: Create release
