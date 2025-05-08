@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/baodrate/obsidian-timestampy/compare/0.1.8...0.1.9) (2025-05-08)
+
+
+### Bug Fixes
+
+* broken delete-beta-pr github workflow ([41b91de](https://github.com/baodrate/obsidian-timestampy/commit/41b91de5d529d854c92caee618e67ddb4b09257f))
+
 ## [0.1.8](https://github.com/baodrate/obsidian-timestampy/compare/0.1.7...0.1.8) (2025-05-07)
 
 
