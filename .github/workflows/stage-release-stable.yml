@@ -5,6 +5,7 @@ env:
     CHANGELOG_FILE_BETA: "CHANGELOG-beta.md"
     VERSIONS_FILE: "versions.json"
     ACTIONS_BOT_LOGIN: "app/github-actions"
+    RELEASE_PLEASE_COMPONENT_BETA: "beta"
 
 on:
   push:
@@ -113,6 +114,8 @@ jobs:
           RELEASE_TAG: ${{ needs.release-please.outputs.release_tag }}
           RELEASE_URL: ${{ needs.release-please.outputs.release_url }}
         run: |
+          BASE_BRANCH=${GITHUB_REF:?}
+          BASE_BRANCH=${BASE_BRANCH#refs/heads/}
           PR=$(
             gh pr list \
             -R "${OWNER:?}/${REPO:?}" \
