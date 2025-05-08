@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2-beta.1](https://github.com/baodrate/obsidian-timestampy/compare/0.1.2-beta...0.1.2-beta.1) (2025-05-08)
+
+
+### Bug Fixes
+
+* test 2 ([509451e](https://github.com/baodrate/obsidian-timestampy/commit/509451e2bacc4a2d4638d43e6ffa6632b8bfbb7b))
+
 ## [0.1.2-beta](https://github.com/baodrate/obsidian-timestampy/compare/0.1.1...0.1.2-beta) (2025-05-08)
 
 
