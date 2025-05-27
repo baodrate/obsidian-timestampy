@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS: TimestampySettings = {
 };
 
 export class TimestampySettingTab extends PluginSettingTab {
-	plugin: TimestampyPlugin;
+	declare plugin: TimestampyPlugin;
 
 	constructor(app: App, plugin: TimestampyPlugin) {
 		super(app, plugin);
