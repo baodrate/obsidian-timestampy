@@ -6,7 +6,7 @@ import {
 } from "./settings";
 
 export default class TimestampyPlugin extends Plugin {
-	settings: TimestampySettings;
+	declare settings: TimestampySettings;
 
 	async onload() {
 		console.debug("loading Timestampy plugin");
