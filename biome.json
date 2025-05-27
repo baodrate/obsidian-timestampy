@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.0.0-beta.4/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.0.0-beta.5/schema.json",
 	"vcs": {
 		"enabled": true,
 		"clientKind": "git",
@@ -31,10 +31,7 @@
 		"rules": {
 			"recommended": true,
 			"style": {
-				"noArguments": "error",
-				"noCommaOperator": "error",
 				"noInferrableTypes": "error",
-				"noNonNullAssertion": "error",
 				"noParameterAssign": "error",
 				"noUnusedTemplateLiteral": "error",
 				"noUselessElse": "error",
@@ -42,15 +39,8 @@
 				"useConst": "error",
 				"useDefaultParameterLast": "error",
 				"useEnumInitializers": "error",
-				"useExponentiationOperator": "error",
-				"useExportType": "error",
-				"useImportType": "error",
-				"useLiteralEnumMembers": "error",
-				"useNodejsImportProtocol": "error",
 				"useNumberNamespace": "error",
-				"useNumericLiterals": "error",
 				"useSelfClosingElements": "error",
-				"useShorthandFunctionType": "error",
 				"useSingleVarDeclarator": "error",
 				"useTemplate": "error"
 			}
