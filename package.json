@@ -20,8 +20,8 @@
 	"funding": "https://github.com/sponsors/baodrate",
 	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "2.0.0-beta.5",
-		"@types/node": "^22.15.23",
+		"@biomejs/biome": "2.0.0-beta.6",
+		"@types/node": "^22.15.29",
 		"builtin-modules": "5.0.0",
 		"obsidian": "^1.8.7",
 		"obsidian-typings": "^3.9.5",
