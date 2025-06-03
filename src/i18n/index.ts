@@ -1,6 +1,6 @@
 import * as en from "./locale/en.json";
 
-const NAMESPACE = "plugin-timestampy";
+export const NAMESPACE = "plugin-timestampy";
 
 window.i18next.addResourceBundle("en", NAMESPACE, en);
 

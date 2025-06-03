@@ -42,9 +42,11 @@ export class TimestampySettingTab extends PluginSettingTab {
 							frag.appendText(t("setting.timestamp-format.desc"));
 							frag.createEl("br");
 							frag.appendText(
+								// @ts-ignore
 								window.i18next.t("plugins.daily-notes.label-refer-to-syntax"),
 							);
 							frag.createEl("a", {
+								// @ts-ignore
 								text: window.i18next.t("plugins.daily-notes.label-syntax-link"),
 								attr: {
 									href: "https://momentjs.com/docs/#/displaying/format/",
@@ -55,6 +57,7 @@ export class TimestampySettingTab extends PluginSettingTab {
 							frag.createEl("br");
 							frag.appendText(
 								window.i18next.t(
+									// @ts-ignore
 									"plugins.daily-notes.label-syntax-live-preview",
 								),
 							);
