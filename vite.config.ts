@@ -1,5 +1,10 @@
+import path from "node:path";
 import builtins from "builtin-modules";
 import { defineConfig, type UserConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import manifest from "./manifest.json";
+
+const pluginId = manifest.id;
 
 const banner = `
 /*!
@@ -12,7 +17,6 @@ export default defineConfig(async ({ mode }) => {
 	const prod = mode === "production";
 
 	return {
-		plugins: [],
 		build: {
 			lib: {
 				entry: "src/main.ts",
@@ -20,14 +24,21 @@ export default defineConfig(async ({ mode }) => {
 				fileName: () => "main.js",
 				formats: ["cjs"],
 			},
+			target: [
+				// corresponds to Obsidian desktop v1.7.7 (Electron 32.2.5)
+				"chrome128",
+				// corresponds to iOS 15 (still supported as of 2025-03-31)
+				"safari15",
+			],
 			minify: prod,
 			sourcemap: prod ? false : "inline",
-			cssCodeSplit: false,
+			cssCodeSplit: true,
 			emptyOutDir: false,
-			outDir: "",
+			outDir: "dist",
 			rollupOptions: {
 				input: {
 					main: "src/main.ts",
+					styles: "src/styles.css",
 				},
 				output: {
 					exports: "named",
@@ -35,6 +46,17 @@ export default defineConfig(async ({ mode }) => {
 					assetFileNames: "styles.css",
 					format: "cjs",
 					banner: banner,
+					sourcemapPathTransform: (relativeSourcePath, sourcemapPath) => {
+						const sourcePath = path.resolve(
+							path.dirname(sourcemapPath),
+							relativeSourcePath,
+						);
+						const projectRelativeSourcePath = path.relative(
+							`${__dirname}/src`,
+							sourcePath,
+						);
+						return `app://obsidian.md/plugin:${pluginId}/${projectRelativeSourcePath}`;
+					},
 				},
 				define: {
 					DEV: (!prod).toString(),
@@ -58,5 +80,19 @@ export default defineConfig(async ({ mode }) => {
 				],
 			},
 		},
+		css: {
+			transformer: "lightningcss",
+			devSourcemap: true,
+		},
+		plugins: [
+			viteStaticCopy({
+				targets: [
+					{
+						src: "manifest.json",
+						dest: ".",
+					},
+				],
+			}),
+		],
 	} as UserConfig;
 });

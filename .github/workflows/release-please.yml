@@ -79,13 +79,12 @@ jobs:
         run: |
           pnpm install
           pnpm run build
-          pnpm run version
 
       - name: Upload release artifacts
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
-        run: gh release upload ${{ env.TAG_NAME }} ./main.js ./manifest.json ./styles.css
+        run: gh release upload ${{ env.TAG_NAME }} ./dist/main.js ./dist/manifest.json ./dist/styles.css
 
       # obsidian expects release title to be same as tag; see: https://github.com/TfTHacker/obsidian42-brat/blob/main/BRAT-DEVELOPER-GUIDE.md
       - name: Rename release
