@@ -8,15 +8,12 @@
 	"files": {
 		"ignoreUnknown": false,
 		"includes": [
-			"**"
+			"**",
+			"!dist"
 		]
 	},
 	"formatter": {
 		"enabled": true,
-		"includes": [
-			"**",
-			"!**/main.js"
-		],
 		"indentStyle": "tab"
 	},
 	"assist": {
@@ -47,11 +44,7 @@
 				"useSingleVarDeclarator": "error",
 				"useTemplate": "error"
 			}
-		},
-		"includes": [
-			"**",
-			"!**/main.js"
-		]
+		}
 	},
 	"javascript": {
 		"formatter": {
