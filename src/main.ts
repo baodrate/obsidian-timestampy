@@ -1,5 +1,5 @@
 declare global {
-	const DEV: boolean;
+	const __DEV__: boolean;
 }
 
 export { default } from "./timestampy";

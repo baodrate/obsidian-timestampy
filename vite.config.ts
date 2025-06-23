@@ -53,9 +53,9 @@ export default defineConfig(async ({ mode }) => {
 					},
 				},
 				define: {
-					DEV: (!prod).toString(),
+					__DEV__: (!prod).toString(),
 				},
-				dropLabels: prod ? ["DEV"] : [],
+				dropLabels: prod ? ["__DEV__"] : [],
 				external: [
 					"obsidian",
 					"electron",
