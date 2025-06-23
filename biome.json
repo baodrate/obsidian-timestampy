@@ -43,6 +43,16 @@
 				"useSelfClosingElements": "error",
 				"useSingleVarDeclarator": "error",
 				"useTemplate": "error"
+			},
+			"suspicious": {
+				"noConfusingLabels": {
+					"level": "warn",
+					"options": {
+						"allowedLabels": [
+							"__DEV__"
+						]
+					}
+				}
 			}
 		}
 	},
