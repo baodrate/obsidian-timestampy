@@ -78,6 +78,8 @@ jobs:
       - name: Build plugin
         run: |
           pnpm install
+          # run version-bump script before manifest.json is copied to dist/ in build step
+          pnpm run version
           pnpm run build
 
       - name: Upload release artifacts
