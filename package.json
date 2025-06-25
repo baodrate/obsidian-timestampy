@@ -4,13 +4,16 @@
 	"description": "An obsidian plugin to track last modified and created dates of notes",
 	"main": "main.js",
 	"scripts": {
-		"build": "tsc -noEmit -skipLibCheck && vite build",
+		"prebuild": "pnpm run lint:typescript",
+		"build": "vite build",
 		"dev": "vite build --watch --mode=development",
 		"format": "biome format --write",
-		"lint": "biome check",
+		"lint": "pnpm run /^lint:.*/",
+		"lint:biome": "biome check",
+		"lint:typescript": "tsc -noEmit -skipLibCheck",
 		"preinstall": "npx only-allow pnpm",
 		"prepare": "husky",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "node version-bump.mjs"
 	},
 	"keywords": [],
 	"author": "@baodrate",

@@ -1,2 +1,10 @@
 #!/bin/sh
+
+if [ "${npm_command:-}" = "version" ]; then
+	# update files modified by version-bump script
+	git add -u manifest.json versions.json
+	# skip pre-commit hook for version command
+	exit 0
+fi
+
 pnpm run lint
