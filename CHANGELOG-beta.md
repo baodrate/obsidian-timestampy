@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2-beta](https://github.com/baodrate/obsidian-timestampy/compare/0.1.1...0.1.2-beta) (2025-06-25)
+
+
+### Features
+
+* rename dev label to __DEV__ ([07933ab](https://github.com/baodrate/obsidian-timestampy/commit/07933ab075c031418b536aa96c4fd7f655068b19))
+
 ## [0.1.1](https://github.com/baodrate/obsidian-timestampy/compare/0.1.0...0.1.1) (2025-06-23)
 
 
