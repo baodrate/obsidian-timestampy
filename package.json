@@ -4,11 +4,11 @@
 	"description": "An obsidian plugin to track last modified and created dates of notes",
 	"main": "main.js",
 	"scripts": {
-		"preinstall": "npx only-allow pnpm",
-		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"lint": "biome check",
+		"dev": "node esbuild.config.mjs",
 		"format": "biome format --write",
+		"lint": "biome check",
+		"preinstall": "npx only-allow pnpm",
 		"version": "node version-bump.mjs && git add manifest.json versions.json"
 	},
 	"keywords": [],
