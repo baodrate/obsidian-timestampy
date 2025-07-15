@@ -24,20 +24,20 @@
 	"funding": "https://github.com/sponsors/baodrate",
 	"license": "MIT",
 	"devDependencies": {
-		"@biomejs/biome": "2.0.5",
+		"@biomejs/biome": "2.1.1",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
 		"@commitlint/types": "^19.8.1",
-		"@types/node": "^24.0.4",
+		"@types/node": "^24.0.13",
 		"builtin-modules": "5.0.0",
 		"husky": "^9.1.7",
-		"i18next": "^25.2.1",
+		"i18next": "^25.3.2",
 		"obsidian": "^1.8.7",
-		"obsidian-typings": "^3.12.0",
+		"obsidian-typings": "^3.12.1",
 		"tslib": "2.8.1",
 		"typescript": "5.8.3",
 		"vite": "npm:rolldown-vite@^7.0.1",
-		"vite-plugin-static-copy": "^3.1.0"
+		"vite-plugin-static-copy": "^3.1.1"
 	},
 	"packageManager": "pnpm@10.12.3+sha512.467df2c586056165580ad6dfb54ceaad94c5a30f80893ebdec5a44c5aa73c205ae4a5bb9d5ed6bb84ea7c249ece786642bbb49d06a307df218d03da41c317417"
 }
